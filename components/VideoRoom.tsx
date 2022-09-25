@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Video, { Room, Participant, LocalTrackPublication } from 'twilio-video';
+import RemoteVideoParticipants from './RemoteVideoParticipant';
 import VideoParticipant from './VideoParticipant';
 
 
@@ -76,10 +77,21 @@ function VideoRoom({
             <button onClick={handleLogout}>Log out</button>
             <div className="local-participant">
                 {room ? (
-                    <VideoParticipant
-                        key={room.localParticipant.sid}
-                        participant={room.localParticipant}
-                    />
+                    <>
+                        <VideoParticipant
+                            key={room.localParticipant.sid}
+                            participant={room.localParticipant}
+                        />
+                        {
+                            Array.from(room.participants.values()).map((remoteParticipant) => (
+                                <RemoteVideoParticipants
+                                    remoteParticipant={remoteParticipant}
+                                    key={remoteParticipant.sid}
+                                />
+                            ))
+
+                        }
+                    </>
                 ) : (
                     ''
                 )}
