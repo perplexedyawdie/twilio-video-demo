@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { VideoTrack, AudioTrack, Track, LocalTrackPublication, RemoteTrackPublication, RemoteVideoTrack, LocalVideoTrack, LocalAudioTrack, RemoteAudioTrack } from 'twilio-video';
+import { VideoTrack, AudioTrack, Track, LocalTrackPublication, RemoteTrackPublication, RemoteVideoTrack, LocalVideoTrack, LocalAudioTrack, RemoteAudioTrack, LocalParticipant } from 'twilio-video';
 interface Props {
-    participant: any;
+    participant: LocalParticipant;
 }
 
 function VideoParticipant({ participant }: Props) {
     const [videoTracks, setVideoTracks] = useState<VideoTrack[] | RemoteVideoTrack[] | LocalVideoTrack[]>([]);
     const [audioTracks, setAudioTracks] = useState<AudioTrack[] | RemoteAudioTrack[] | LocalAudioTrack[]>([]);
 
-    const videoRef = useRef<any>();
-    const audioRef = useRef<any>();
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
     function trackpubsToVideoTracks(trackMap: Map<Track.SID, LocalTrackPublication | RemoteTrackPublication>) {
         return Array.from(trackMap.values())
         .filter((publication) => publication.track !== null && publication.kind === 'video')
@@ -57,7 +57,7 @@ function VideoParticipant({ participant }: Props) {
 
     useEffect(() => {
         const videoTrack = videoTracks[0];
-        if (videoTrack) {
+        if (videoTrack && videoRef.current) {
             videoTrack.attach(videoRef.current);
             return () => {
                 videoTrack.detach();
@@ -67,7 +67,7 @@ function VideoParticipant({ participant }: Props) {
 
     useEffect(() => {
         const audioTrack = audioTracks[0];
-        if (audioTrack) {
+        if (audioTrack && audioRef.current) {
             audioTrack.attach(audioRef.current);
             return () => {
                 audioTrack.detach();

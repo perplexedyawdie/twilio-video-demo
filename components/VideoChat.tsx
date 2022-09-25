@@ -3,9 +3,9 @@ import Lobby from './Lobby';
 import VideoRoom from './VideoRoom';
 
 function VideoChat() {
-    const [username, setUsername] = useState('');
-    const [roomName, setRoomName] = useState('');
-    const [token, setToken] = useState(null);
+    const [username, setUsername] = useState<string>('');
+    const [roomName, setRoomName] = useState<string>('');
+    const [token, setToken] = useState<string | null>(null);
 
     const handleUsernameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
